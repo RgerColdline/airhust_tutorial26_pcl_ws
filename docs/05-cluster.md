@@ -150,7 +150,7 @@ unsigned int compute3DCentroid(const pcl::PointCloud<PointT>& cloud,
 
 ## 封装成函数
 
-[`05_cluster.cpp`](../src/tutorial_pcl_basic/src/05_cluster.cpp) 的流程是：读点云 → 降采样 → 裁区域 → 聚类 → 染色保存。`downsample` 和 `region` 复用自己在 3.3 完成的实现，并按本节数据调整范围；本节需要新完成的是 `cluster` 和 `clusterCenter`。
+[`05_cluster.cpp`](../src/tutorial_pcl_basic/src/05_cluster.cpp) 的流程是：读点云 → 降采样 → 裁区域 → 聚类 → 染色保存。`downsample` 和 `region` 已经写好，作为 3.3 中滤波接口的基础用法示例；本节需要补全的是 `cluster` 和 `clusterCenter`。
 
 ```cpp
 void downsample(const Cloud::ConstPtr& cloud, Cloud& output, float leaf);

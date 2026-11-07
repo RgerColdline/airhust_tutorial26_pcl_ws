@@ -39,14 +39,21 @@ void readCloud(const std::string& path, Cloud& cloud) {
 }
 
 void downsample(const Cloud::ConstPtr& cloud, Cloud& output, float leaf) {
-  // 复用自己在 3.3 完成的降采样实现，参数使用传入的 leaf。
-  output = *cloud;
+  output.clear();
+  pcl::VoxelGrid<pcl::PointXYZI> grid;
+  grid.setInputCloud(cloud);
+  grid.setLeafSize(leaf, leaf, leaf);
+  grid.filter(output);
   std::cout << "降采样后点数: " << output.size() << "\n";
 }
 
 void region(const Cloud::ConstPtr& cloud, Cloud& output) {
-  // 复用自己在 3.3 完成的区域筛选，范围按 3.5 的说明调整。
-  output = *cloud;
+  output.clear();
+  pcl::CropBox<pcl::PointXYZI> crop;
+  crop.setInputCloud(cloud);
+  crop.setMin(Eigen::Vector4f(1.6f, 1.0f, 0.2f, 1.0f));
+  crop.setMax(Eigen::Vector4f(6.6f, 5.0f, 2.4f, 1.0f));
+  crop.filter(output);
   std::cout << "裁剪后点数: " << output.size() << "\n";
 }
 
