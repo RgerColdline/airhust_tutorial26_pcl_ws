@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# 阶段三考核程序启动脚本。
+#
+#   ./run                打印用法
+#   ./run 3              运行阶段三第 3 个程序
+#   ./run 3 别的.pcd      换一份数据
+
+set -eo pipefail
+cd "$(dirname "$(readlink -f "$0")")"
+
+usage() {
+  cat <<'EOF'
+用法：
+  ./run <1|2|3|5> [点云文件]    阶段三考核程序
+  ./run 7                              在线综合考核程序
+
+例子：
+  ./run 1                               # 看看点云里有什么
+  ./run 3 data/table_scene_lms400.pcd   # 拿真实数据跑滤波
+EOF
+}
+
+[ $# -ge 1 ] || { usage; exit 0; }
+case "$1" in -h|--help|help) usage; exit 0 ;; esac
+
+mode="$1"; shift
+
+case "$mode" in
+  1) bin=s01_io ;;
+  2) bin=s02_publish ;;
+  3) bin=s03_filter ;;
+  5) bin=s05_cluster ;;
+  7) bin=s07_pipeline ;;
+  -h|--help|help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "没有编号 $mode 这个程序" >&2
+    usage
+    exit 1
+    ;;
+esac
+
+if [ ! -f devel/setup.bash ]; then
+  echo "请先执行 catkin_make --pkg tutorial_pcl_basic" >&2
+  exit 1
+fi
+# shellcheck disable=SC1091
+source devel/setup.bash
+if [ ! -x "devel/lib/tutorial_pcl_basic/$bin" ]; then
+  echo "找不到程序 $bin，请重新编译。" >&2
+  exit 1
+fi
+exec "devel/lib/tutorial_pcl_basic/$bin" "$@"

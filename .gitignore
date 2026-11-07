@@ -1,0 +1,13 @@
+build
+devel
+install
+src/CMakeLists.txt
+out/*
+!out/.gitkeep
+*.pyc
+__pycache__/
+.catkin_workspace
+compile_commands.json
+.cache/
+.dsh/
+STYLE.md
